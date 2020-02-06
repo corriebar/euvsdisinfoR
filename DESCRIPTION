@@ -20,4 +20,6 @@ Imports:
     purrr,
     jsonlite,
     janitor,
-    httr
+    httr,
+    utils,
+    stringr

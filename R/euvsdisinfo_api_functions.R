@@ -70,7 +70,7 @@ euvsdisinfo_api <- function(path="claims") {
 
 print.euvsdisinfo_api <- function(x, ...) {
   cat("<EUvsDisinfo:", x$path, ">\n", sep = "")
-  str(x, max.level=1)
+  utils::str(x, max.level=1)
   invisible(x)
 }
 
@@ -243,5 +243,4 @@ get_languages <- function(pages=1) {
   path <- "languages"
   paginate_resps(path, pages)
 }
-
 
