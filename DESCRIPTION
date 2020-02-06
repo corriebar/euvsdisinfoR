@@ -1,5 +1,5 @@
 Package: euvsdisinfoR
-Title: Access the EU vs Disinfo API
+Title: Access the EUvsDisinfo API
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Corrie",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "corrie.b@web.de")
 Description: Contains wrapper functions to access the
-  [API](https://api.veedoo.io/) provided by [EU vs Disinfo](https://euvsdisinfo.eu/)
+  [API](https://api.veedoo.io/) provided by [EUvsDisinfo](https://euvsdisinfo.eu/)
   as well as some helpful functions to combine the different data sets.
 License: GPL-3
 Encoding: UTF-8

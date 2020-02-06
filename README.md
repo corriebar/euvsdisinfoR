@@ -5,7 +5,7 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of euvsdisinfoR is to provide some easy-to-use wrapper functions for the [API](api.veedoo.io/) provided by [EU vs Disinfo](https://euvsdisinfo.eu/).  The API provides access to the EUvsDisinfo data base which contains over 7000 disinformation cases and debunks. The EUvsDisinfo project started its work in 2015 and identifies, compiles, and exposes disinformation cases originating in pro-Kremlin media that are spread across the EU and Eastern Partnership countries.
+The goal of euvsdisinfoR is to provide some easy-to-use wrapper functions for the [API](api.veedoo.io/) provided by [EUvsDisinfo](https://euvsdisinfo.eu/).  The API provides access to the EUvsDisinfo data base which contains over 7000 disinformation cases and debunks. The EUvsDisinfo project started its work in 2015 and identifies, compiles, and exposes disinformation cases originating in pro-Kremlin media that are spread across the EU and Eastern Partnership countries.
 
 The package is based on work done together with my team colleagues, Alix Dumoulin and Alexandra Pavliuc, during the EUvsDisinformation hackathon, Jan 2020. Our hackathon project can be found [here](https://github.com/alix-dumoulin/eu_disinformation).
 
