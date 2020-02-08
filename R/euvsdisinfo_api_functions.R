@@ -1,5 +1,5 @@
 
-
+#' @importFrom rlang .data
 ua <- httr::user_agent("https://github.com/corriebar/euvsdisinfoR")
 
 get_page_info <- function(parsed) {
@@ -125,14 +125,19 @@ paginate_resps <- function(path, pages) {
 #' }
 get_claims <- function(pages=1) {
   path <- "claims"
-  paginate_resps(path, pages)
+  claims <- paginate_resps(path, pages)
+  claims %>%
+    dplyr::rename(claims_id = .data$id,
+           review_id = .data$claim_review)
 }
 
 #' @describeIn get_claims Get claim reviews.
 #' @export
 get_claim_reviews <- function(pages=1) {
   path <- "claim_reviews"
-  paginate_resps(path, pages)
+  reviews <- paginate_resps(path, pages)
+  reviews %>%
+    dplyr::select(claims_id = .data$item_reviewed, .data$type:.data$text)
 }
 
 
@@ -151,14 +156,18 @@ get_claim_reviews <- function(pages=1) {
 #' }
 get_organizations <- function(pages=1) {
   path <- "organizations"
-  paginate_resps(path, pages)
+  orgs <- paginate_resps(path, pages)
+  orgs %>%
+    dplyr::rename(organizations_id = .data$id)
 }
 
 #' @describeIn get_organizations Get organizations
 #' @export
 get_authors <- function(pages=1) {
   path <- "authors"
-  paginate_resps(path, pages)
+  authors <- paginate_resps(path, pages)
+  authors %>%
+    dplyr::rename(organizations_id = .data$id)
 }
 
 #' Get issues
@@ -175,7 +184,10 @@ get_authors <- function(pages=1) {
 #' }
 get_issues <- function(pages=1) {
   path <- "issues"
-  paginate_resps(path, pages)
+  issues <- paginate_resps(path, pages)
+  issues %>%
+    dplyr::select(-.data$id_2) %>%
+    dplyr::rename(issues_id = .data$id)
 }
 
 #' Get creative works
@@ -194,21 +206,27 @@ get_issues <- function(pages=1) {
 #' }
 get_creative_works <- function(pages=1) {
   path <- "creative_works"
-  paginate_resps(path, pages)
+  creative_works <- paginate_resps(path, pages)
+  creative_works %>%
+    dplyr::rename(cw_id = .data$id)
 }
 
 #' @describeIn get_creative_works Get only news articles.
 #' @export
 get_news_articles <- function(pages=1) {
   path <- "news_articles"
-  paginate_resps(path, pages)
+  newsarticle <- paginate_resps(path, pages)
+  newsarticle %>%
+    dplyr::rename(cw_id = .data$id)
 }
 
 #' @describeIn get_creative_works Get only media objects (videos).
 #' @export
 get_media_objects <- function(pages=1) {
   path <- "media_objects"
-  paginate_resps(path, pages)
+  media_objects <- paginate_resps(path, pages)
+  media_objects %>%
+    dplyr::rename(cw_id = .data$id)
 }
 
 
@@ -227,20 +245,26 @@ get_media_objects <- function(pages=1) {
 #' }
 get_countries <- function(pages=1) {
   path <- "countries"
-  paginate_resps(path, pages)
+  countries <- paginate_resps(path, pages)
+  countries %>%
+    dplyr::rename(country_id = .data$id)
 }
 
 #' @describeIn get_countries Get keywords.
 #' @export
 get_keywords <- function(pages=1) {
   path <- "keywords"
-  paginate_resps(path, pages)
+  keywords <- paginate_resps(path, pages)
+  keywords %>%
+    dplyr::rename(keyword_id = .data$id)
 }
 
 #' @describeIn get_countries Get countries.
 #' @export
 get_languages <- function(pages=1) {
   path <- "languages"
-  paginate_resps(path, pages)
+  langauges <- paginate_resps(path, pages)
+  langauges %>%
+    dplyr::rename(language_id = .data$id)
 }
 

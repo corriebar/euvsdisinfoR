@@ -22,4 +22,6 @@ Imports:
     janitor,
     httr,
     utils,
-    stringr
+    stringr,
+    magrittr,
+    rlang
