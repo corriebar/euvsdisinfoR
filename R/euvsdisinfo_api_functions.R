@@ -126,6 +126,8 @@ paginate_resps <- function(path, pages) {
 get_claims <- function(pages=1) {
   path <- "claims"
   claims <- paginate_resps(path, pages)
+  dups <- duplicated(claims)
+  claims <- claims[dups,]
   claims %>%
     dplyr::rename(claims_id = .data$id,
            review_id = .data$claim_review)
