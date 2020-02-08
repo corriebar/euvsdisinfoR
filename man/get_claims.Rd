@@ -5,12 +5,14 @@
 \alias{get_claim_reviews}
 \title{Get claims and claim reviews}
 \usage{
-get_claims(pages = 1)
+get_claims(pages = 1, remove_duplicates = TRUE)
 
 get_claim_reviews(pages = 1)
 }
 \arguments{
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
+
+\item{remove_duplicates}{Remove claim duplicates. Defaults to TRUE.}
 }
 \description{
 Returns the claims (containing meta-data regarding the claims) a

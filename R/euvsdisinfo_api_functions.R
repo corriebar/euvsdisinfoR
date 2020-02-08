@@ -62,13 +62,13 @@ euvsdisinfo_api <- function(path="claims") {
       last_page = page_info$last_page,
       next_page = page_info$next_page
     ),
-    class = "euvsdisinfo_api"
+    class = "disinfo_request"
   )
 
 }
 
 
-print.euvsdisinfo_api <- function(x, ...) {
+print.disinfo_request <- function(x, ...) {
   cat("<EUvsDisinfo:", x$path, ">\n", sep = "")
   utils::str(x, max.level=1)
   invisible(x)
@@ -129,9 +129,10 @@ get_claims <- function(pages=1, remove_duplicates=TRUE) {
   claims <- paginate_resps(path, pages)
   if (remove_duplicates) {
     dups <- duplicated(claims)
-    claims <- claims[dups,]
+    claims <- claims[!dups,]
   }
   claims %>%
+    dplyr::select(-.data$author) %>%
     dplyr::rename(claims_id = .data$id,
            review_id = .data$claim_review)
 }

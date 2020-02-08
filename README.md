@@ -52,4 +52,4 @@ The different data sets form the following data model:
 
 ![png](man/data_diagram.png?raw=true "Data Model")
 
-Note that the columns `appearances`, `keywords` and `content_locations` in claims contain lists  of creative works, keywords, or countries, resp.
+Note that the columns `appearances`, `keywords` and `content_locations` in the claims data frame contain lists  of creative works, keywords, or countries, resp.
