@@ -45,3 +45,11 @@ get_keywords(4)
 get_countries("all")
 get_organizations("all")
 ```
+
+
+## The Data
+The different data sets form the following data model:
+
+![data model diagram](man/data_diagramm.png)
+
+Note that the columns `keywords` and `content_locations` in claims contain list of keywords or countries, resp.
