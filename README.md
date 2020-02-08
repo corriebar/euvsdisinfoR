@@ -50,6 +50,6 @@ get_organizations("all")
 ## The Data
 The different data sets form the following data model:
 
-![](man/data_diagramm.png "Data Model")
+![png](man/data_diagramm.png "Data Model")
 
 Note that the columns `appearances`, `keywords` and `content_locations` in claims contain lists  of creative works, keywords, or countries, resp.
