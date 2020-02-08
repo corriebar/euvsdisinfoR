@@ -24,4 +24,5 @@ Imports:
     utils,
     stringr,
     magrittr,
-    rlang
+    rlang,
+    tidyr
