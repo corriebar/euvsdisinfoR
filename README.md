@@ -20,30 +20,34 @@ devtools::install_github("corriebar/euvsdisinfoR")
 
 ## Example
 
-To download the claims with their summary and disproof collected in the EUvsDisinfo data base, you can use the following command:
+To download the different data tables from the EUvsDisinfo data base, it is easiest to collect them in a `disinfo()` object:
 ``` r
 library(euvsdisinfoR)
+d <- disinfo()
+```
+
+It is possible to either add only a few tables or all at once:
+``` r
+d %>%
+  add_claims(pages=3) %>%
+  add_reviews("all")
+
+d %>% 
+  add_all("all")
+```
+To then flatten the disinfo object and obtain one single data frame, one can use
+``` r
+d %>%
+  flatten_disinfo()
+```
+This attempts to merge as much as possible (according to the relations from the data model below) and returns a single data frame. It either returns a data frame where each row is a creative work or where each row is a claim (if the disinfo object contains no creative works).
+
+It is also possible to only download single data tables:
+``` r
 # get first 3 pages from the claims endpoint
 get_claims(pages=3)
-# or get all claims
-get_claims(pages="all")
-```
-To download the corresponding news articles or media objects that spread the claims, you can use:
-``` r
-# retrieve both news articles and media objects
-get_creative_works(3)
-
-# retrieve only news articles or media objects
-get_news_articles(3)
-get_media_objects(pages=2)
-```
-
-A few features use IDs, such as country or keyword ID. The data frames with these IDs and their values can be downloaded as follows:
-``` r
-get_languages("all")
-get_keywords(4)
-get_countries("all")
-get_organizations("all")
+# or get all creative works
+get_creative_works(pages="all")
 ```
 
 
@@ -52,4 +56,4 @@ The different data sets form the following data model:
 
 ![png](man/data_diagram.png?raw=true "Data Model")
 
-Note that the columns `appearances`, `keywords` and `content_locations` in the claims data frame contain lists  of creative works, keywords, or countries, resp.
+Note that the columns `appearances`, `keywords` and `content_locations` in the claims data frame contain lists  of creative works, keywords, or countries (resp).
