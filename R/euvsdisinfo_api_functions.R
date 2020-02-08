@@ -115,6 +115,7 @@ paginate_resps <- function(path, pages) {
 #' and claim reviews (containing the summarized claim and disproof).
 #'
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
+#' @param remove_duplicates Remove claim duplicates. Defaults to TRUE.
 #' @export
 #' @examples
 #' \dontrun{
@@ -123,11 +124,13 @@ paginate_resps <- function(path, pages) {
 #' \dontrun{
 #' get_claim_reviews("all")
 #' }
-get_claims <- function(pages=1) {
+get_claims <- function(pages=1, remove_duplicates=TRUE) {
   path <- "claims"
   claims <- paginate_resps(path, pages)
-  dups <- duplicated(claims)
-  claims <- claims[dups,]
+  if (remove_duplicates) {
+    dups <- duplicated(claims)
+    claims <- claims[dups,]
+  }
   claims %>%
     dplyr::rename(claims_id = .data$id,
            review_id = .data$claim_review)
