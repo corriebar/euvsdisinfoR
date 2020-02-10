@@ -7,12 +7,14 @@
 \usage{
 get_claims(pages = 1, remove_duplicates = TRUE)
 
-get_claim_reviews(pages = 1)
+get_claim_reviews(pages = 1, clean_html = TRUE)
 }
 \arguments{
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
 
 \item{remove_duplicates}{Remove claim duplicates. Defaults to TRUE.}
+
+\item{clean_html}{If TRUE, then add another column `text` which is a plain text version of `html_text`}
 }
 \description{
 Returns the claims (containing meta-data regarding the claims)

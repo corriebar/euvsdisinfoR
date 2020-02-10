@@ -25,4 +25,6 @@ Imports:
     stringr,
     magrittr,
     rlang,
-    tidyr
+    tidyr,
+    rvest,
+    xml2

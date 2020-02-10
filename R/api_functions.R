@@ -136,14 +136,24 @@ get_claims <- function(pages=1, remove_duplicates=TRUE) {
            review_id = .data$claim_review)
 }
 
+strip_html <- function(s) {
+  rvest::html_text(xml2::read_html(s))
+}
+
 #' @describeIn get_claims Get claim reviews.
+#' @param clean_html If TRUE, then add another column `text` which is a plain text version of `html_text`
 #' @export
-get_claim_reviews <- function(pages=1) {
+get_claim_reviews <- function(pages=1, clean_html=TRUE) {
   path <- "claim_reviews"
   reviews <- paginate_resps(path, pages)
-  reviews %>%
+  reviews <- reviews %>%
     dplyr::select(claims_id = .data$item_reviewed, .data$type:.data$text) %>%
-    dplyr::rename(review_name = .data$name)
+    dplyr::rename(review_name = .data$name, html_text = .data$text)
+  if (clean_html) {
+    reviews <- reviews %>%
+      dplyr::mutate(text = purrr::map_chr(.data$html_text, .f=strip_html))
+  }
+  reviews
 }
 
 

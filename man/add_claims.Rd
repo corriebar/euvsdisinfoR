@@ -16,7 +16,7 @@
 \usage{
 add_claims(disinfo, pages = 1)
 
-add_reviews(disinfo, pages = 1)
+add_reviews(disinfo, pages = 1, clean_html = TRUE)
 
 add_authors(disinfo, pages = 1)
 

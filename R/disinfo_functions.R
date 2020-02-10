@@ -116,8 +116,8 @@ add_claims <- function(disinfo, pages = 1) {
 
 #' @describeIn add_claims Download claim reviews data and add to disinfo object.
 #' @export
-add_reviews <- function(disinfo, pages = 1) {
-  reviews <- get_claim_reviews(pages)
+add_reviews <- function(disinfo, pages = 1, clean_html=TRUE) {
+  reviews <- get_claim_reviews(pages, clean_html=clean_html)
   new_disinfo(claims=disinfo$claims,
               reviews = reviews,
               authors = disinfo$authors,
