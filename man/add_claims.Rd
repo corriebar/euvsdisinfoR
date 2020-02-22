@@ -66,6 +66,8 @@ Add the different data tables to the disinfo object by calling the EUvsDisinfo A
 \item \code{add_authors}: Download authors data and add to disinfo object.
 
 \item \code{add_creative_works}: Download creative works data and add to disinfo object.
+If either claims or claim reviews already exists in disinfo, then it will only
+download creative works that link to these claims/reviews
 
 \item \code{add_issues}: Download issues data and add to disinfo object.
 
@@ -78,10 +80,14 @@ Add the different data tables to the disinfo object by calling the EUvsDisinfo A
 \item \code{add_news_articles}: Download news articles data and add to disinfo object. Will be
 written to `creative_works` and overwrites any previous creative works data.
 If you want to have both news articles and media objects, use `add_creative_works()`.
+If either claims or claim reviews already exists in disinfo, then it will only
+download news articles that link to these claims/reviews
 
 \item \code{add_media_objects}: Download media objects data and add to disinfo object. Will be
 written to `creative_works` and overwrites any previous creative works data.
 If you want to have both news articles and media objects, use `add_creative_works()`.
+If either claims or claim reviews already exists in disinfo, then it will only
+download media objects that link to these claims/reviews
 
 \item \code{add_all}: Downloads all 8 data tables from the API and adds them to the disinfo object.
 }}
