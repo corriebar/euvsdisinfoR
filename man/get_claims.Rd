@@ -5,24 +5,33 @@
 \alias{get_claim_reviews}
 \title{Get claims and claim reviews}
 \usage{
-get_claims(pages = 1, remove_duplicates = TRUE)
+get_claims(pages = 1, remove_duplicates = TRUE, published_since = NULL)
 
-get_claim_reviews(pages = 1, clean_html = TRUE)
+get_claim_reviews(
+  pages = 1,
+  clean_html = TRUE,
+  published_since = NULL,
+  reviewed_since = NULL
+)
 }
 \arguments{
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
 
 \item{remove_duplicates}{Remove claim duplicates. Defaults to TRUE.}
 
-\item{clean_html}{If TRUE, then add another column `text` which is a plain text version of `html_text`}
+\item{published_since}{Date string. Only retrieve claims that were published after this date.}
+
+\item{clean_html}{If TRUE, then add another column `text` which is a plain text version of `html_text`.
+Defaults to TRUE.}
+
+\item{reviewed_since}{Date string. Only retrieve claim reviews where the claim was reviewed after this date.}
 }
 \description{
-Returns the claims (containing meta-data regarding the claims)
-and claim reviews (containing the summarized claim and disproof).
+Retrieve the claims and claim reviews.
 }
 \section{Functions}{
 \itemize{
-\item \code{get_claim_reviews}: Get claim reviews.
+\item \code{get_claim_reviews}: Retrieves the claim reviews which contains the summarized claim and disproof.
 }}
 
 \examples{
@@ -30,5 +39,8 @@ and claim reviews (containing the summarized claim and disproof).
 get_claims(2)
 
 get_claim_reviews("all")
+
+library(lubridate)
+get_claims(2, since = today() - months(3) )
 }
 }

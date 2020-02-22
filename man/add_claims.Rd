@@ -14,9 +14,15 @@
 \alias{add_all}
 \title{Add data to disinfo object}
 \usage{
-add_claims(disinfo, pages = 1)
+add_claims(disinfo, pages = 1, published_since = NULL)
 
-add_reviews(disinfo, pages = 1, clean_html = TRUE)
+add_reviews(
+  disinfo,
+  pages = 1,
+  clean_html = TRUE,
+  published_since = NULL,
+  reviewed_since = NULL
+)
 
 add_authors(disinfo, pages = 1)
 
@@ -34,12 +40,20 @@ add_news_articles(disinfo, pages = 1)
 
 add_media_objects(disinfo, pages = 1)
 
-add_all(disinfo, pages = 1)
+add_all(disinfo, pages = 1, reviewed_since = NULL, published_since = NULL)
 }
 \arguments{
 \item{disinfo}{A disinfo object.}
 
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
+
+\item{published_since}{Date string. Only retrieve claims or claim reviews where the claims were published after this date.}
+
+\item{clean_html}{If TRUE, then add another column `text` which is a plain text version of `html_text`.
+Defaults to TRUE.}
+
+\item{reviewed_since}{Date string. Only retrieve claim reviews that were reviewed after this date.
+It is currently only possible to restrict the claim reviews by the reviewing date.}
 }
 \description{
 Add the different data tables to the disinfo object by calling the EUvsDisinfo API.

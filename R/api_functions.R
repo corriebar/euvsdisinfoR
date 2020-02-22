@@ -91,10 +91,15 @@ get_data_from_page <- function(page_path, pb) {
   resp$data
 }
 
-paginate_resps <- function(path, pages, since = NULL) {
-  if ( !is.null(since) ) {
-    request_path <- paste0(path, "?datePublished[after]=", since)
-  } else {
+paginate_resps <- function(path, pages, published_since = NULL, reviewed_since = NULL) {
+  if ( !is.null(reviewed_since)  & path == "claim_reviews")  {
+    request_path <- paste0(path, "?datePublished[after]=", reviewed_since)
+  } else if ( !is.null(published_since) & path == "claims") {
+    request_path <- paste0(path, "?datePublished[after]=", published_since)
+  } else if ( !is.null(published_since) & path == "claim_reviews") {
+    request_path <- paste0(path, "?itemReviewed.datePublished[after]=", published_since)
+  }
+  else {
     request_path <- path
   }
   resp <- euvsdisinfo_api(request_path, first_request = TRUE)
@@ -114,8 +119,10 @@ paginate_resps <- function(path, pages, since = NULL) {
   }
 
   message(paste("Starting to download the first", pages, "pages for", path, " (out of", last_page_no, "available pages)."))
-  if ( !is.null(since) )
-    message(paste("Published after", since ) )
+  if ( !is.null(published_since) )
+    message(paste("Published after", published_since ) )
+  if ( !is.null(reviewed_since) )
+    message(paste("Reviewed after", reviewed_since ) )
 
   if (pages == 1) {
     # no need for further requests
@@ -140,9 +147,8 @@ paginate_resps <- function(path, pages, since = NULL) {
 #'
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
 #' @param remove_duplicates Remove claim duplicates. Defaults to TRUE.
-#' @param since Date string. Only retrieve claims or reviews published after this date.
-#' For claim reviews, the date the item was reviewed is used, whereas for
-#' claims the date when the item was published is used.
+#' @param published_since Date string. Only retrieve claims that were published after this date.
+#' @param reviewed_since Date string. Only retrieve claim reviews where the claim was reviewed after this date.
 #' @param clean_html If TRUE, then add another column `text` which is a plain text version of `html_text`.
 #' Defaults to TRUE.
 #' @export
@@ -155,9 +161,9 @@ paginate_resps <- function(path, pages, since = NULL) {
 #' library(lubridate)
 #' get_claims(2, since = today() - months(3) )
 #' }
-get_claims <- function(pages=1, remove_duplicates=TRUE, since=NULL) {
+get_claims <- function(pages=1, remove_duplicates=TRUE, published_since=NULL) {
   path <- "claims"
-  claims <- paginate_resps(path, pages, since)
+  claims <- paginate_resps(path, pages, published_since=published_since)
   if (remove_duplicates) {
     dups <- duplicated(claims)
     claims <- claims[!dups,]
@@ -178,9 +184,9 @@ strip_html <- function(s) {
 
 #' @describeIn get_claims Retrieves the claim reviews which contains the summarized claim and disproof.
 #' @export
-get_claim_reviews <- function(pages=1, clean_html=TRUE, since=NULL) {
+get_claim_reviews <- function(pages=1, clean_html=TRUE, published_since=NULL, reviewed_since=NULL) {
   path <- "claim_reviews"
-  reviews <- paginate_resps(path, pages, since)
+  reviews <- paginate_resps(path, pages, published_since, reviewed_since)
   if (nrow(reviews) > 0 ) {
     reviews <- reviews %>%
       dplyr::select(claims_id = .data$item_reviewed, .data$type:.data$text) %>%
