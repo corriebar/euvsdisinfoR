@@ -35,6 +35,17 @@ d %>%
 d %>% 
   add_all("all")
 ```
+For claims and claim reviews, it is also possible to query only claims/reviews that were published or reviewed after a certain date:
+``` r
+d %>%
+     add_claims(published_since = today() - months(3) ) %>%
+     add_reviews(published_since = today() - months(3) )
+     
+d %>%
+     add_reviews(reviewed_since = today() - months(2) )
+```
+where `published_since` always relates to when the claim was originally published and `reviewed_since` refers to when an item was reviewed.
+
 To then flatten the disinfo object and obtain one single data frame, one can use
 ``` r
 d %>%

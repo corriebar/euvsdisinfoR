@@ -105,6 +105,10 @@ disinfo <- function(claims = data.frame(),
 #'    add_claims()
 #'
 #' d %>%
+#'     add_claims(published_since = today() - months(3) ) %>%
+#'     add_reviews(published_since = today() - months(3) )
+#'
+#' d %>%
 #'    add_all()
 #' }
 add_claims <- function(disinfo, pages = 1, published_since = NULL) {
@@ -322,8 +326,10 @@ has_countries <- function(disinfo) {
 
 #' Flatten disinfo object
 #'
-#' Joins the different data frames in a smart way so that either each row corresponds to a claim or a creative work.
-#' Only full observations are kept.
+#' This attempts to merge as much as possible and always
+#' returns a single data frame. It either returns a
+#' data frame where either each row is a creative work
+#' or where each row is a claim (if the disinfo object contains no creative works).
 #'
 #' @param disinfo A disinfo object.
 #' @export
