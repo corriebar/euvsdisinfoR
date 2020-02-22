@@ -93,6 +93,10 @@ d \%>\%
    add_claims()
 
 d \%>\%
+    add_claims(published_since = today() - months(3) ) \%>\%
+    add_reviews(published_since = today() - months(3) )
+
+d \%>\%
    add_all()
 }
 }

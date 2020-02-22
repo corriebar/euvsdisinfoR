@@ -91,13 +91,27 @@ get_data_from_page <- function(page_path, pb) {
   resp$data
 }
 
-paginate_resps <- function(path, pages, published_since = NULL, reviewed_since = NULL) {
+paginate_resps <- function(path, pages, published_since = NULL, reviewed_since = NULL, claims_list = NULL) {
+  query <- FALSE
   if ( !is.null(reviewed_since)  & path == "claim_reviews")  {
+    query <- TRUE
     request_path <- paste0(path, "?datePublished[after]=", reviewed_since)
   } else if ( !is.null(published_since) & path == "claims") {
+    query <- TRUE
     request_path <- paste0(path, "?datePublished[after]=", published_since)
   } else if ( !is.null(published_since) & path == "claim_reviews") {
+    query <- TRUE
     request_path <- paste0(path, "?itemReviewed.datePublished[after]=", published_since)
+  } else if (!is.null(claims_list) & length(claims_list) > 0) {
+    query <- TRUE
+    no_claims <- length(claims_list)
+    if (no_claims == 1 ) {
+      claims_param <- paste0("?claim[]=",claims_list[1])
+    } else {
+      cl <- c(paste0("?claim[]=",claims_list[1]), paste0("&claim[]=", claims_list[2:no_claims]))
+      claims_param <- paste0(cl, collapse = "")
+    }
+    request_path <- paste0(path, claims_param)
   }
   else {
     request_path <- path
@@ -130,7 +144,11 @@ paginate_resps <- function(path, pages, published_since = NULL, reviewed_since =
   }
   else {
     # paginate through remaining pages
-    page_paths <- paste0(path, "?page=", 2:pages)
+    if (query) {
+      page_paths <- paste0(request_path, "&page=", 2:pages)
+    } else {
+      page_paths <- paste0(request_path, "?page=", 2:pages)
+    }
 
     pb <- dplyr::progress_estimated(length(page_paths))
 
@@ -203,6 +221,7 @@ get_claim_reviews <- function(pages=1, clean_html=TRUE, published_since=NULL, re
 
 
 
+
 #' Get authors and organizations
 #'
 #' Currently, there is no difference between organizations and authors and
@@ -262,6 +281,8 @@ get_issues <- function(pages=1) {
   issues
 }
 
+
+
 #' Get creative works
 #'
 #' Returns the creative works (containing both news articles and media objects) or
@@ -270,15 +291,18 @@ get_issues <- function(pages=1) {
 #' an abstract (if applicable).
 #'
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
+#' @param claims_list Vector of claim IDs (of format "/claims/xx") for
+#' which to download the creative work items.
 #' @export
 #' @examples
 #' \dontrun{
 #' get_news_articles(pages=1)
 #' get_media_objects("all")
+#' get_creative_works(claims_list = c("/claims/36", "/claims/24"))
 #' }
-get_creative_works <- function(pages=1) {
+get_creative_works <- function(pages=1, claims_list = NULL) {
   path <- "creative_works"
-  creative_works <- paginate_resps(path, pages)
+  creative_works <- paginate_resps(path, pages, claims_list = claims_list)
   if (nrow(creative_works) > 0 ) {
     creative_works <- creative_works %>%
       # date_published always empty for works (so far)
@@ -290,9 +314,9 @@ get_creative_works <- function(pages=1) {
 
 #' @describeIn get_creative_works Get only news articles.
 #' @export
-get_news_articles <- function(pages=1) {
+get_news_articles <- function(pages=1, claims_list = NULL) {
   path <- "news_articles"
-  newsarticle <- paginate_resps(path, pages)
+  newsarticle <- paginate_resps(path, pages, claims_list = claims_list)
   if (nrow(newsarticle) > 0 ){
     newsarticle <- newsarticle %>%
       # date_published always empty for works (so far)
@@ -304,9 +328,9 @@ get_news_articles <- function(pages=1) {
 
 #' @describeIn get_creative_works Get only media objects (videos).
 #' @export
-get_media_objects <- function(pages=1) {
+get_media_objects <- function(pages=1, claims_list = NULL) {
   path <- "media_objects"
-  media_objects <- paginate_resps(path, pages)
+  media_objects <- paginate_resps(path, pages, claims_list = claims_list)
   if (nrow(media_objects) > 0 ) {
     media_objects <- media_objects %>%
       # date_published always empty for works (so far)

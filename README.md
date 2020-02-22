@@ -37,6 +37,8 @@ d %>%
 ```
 For claims and claim reviews, it is also possible to query only claims/reviews that were published or reviewed after a certain date:
 ``` r
+library(lubridate)
+
 d %>%
      add_claims(published_since = today() - months(3) ) %>%
      add_reviews(published_since = today() - months(3) )

@@ -10,7 +10,10 @@ flatten_disinfo(disinfo)
 \item{disinfo}{A disinfo object.}
 }
 \description{
-Flatten disinfo object
+This attempts to merge as much as possible and always
+returns a single data frame. It either returns a
+data frame where either each row is a creative work
+or where each row is a claim (if the disinfo object contains no creative works).
 }
 \examples{
 d <- disinfo()

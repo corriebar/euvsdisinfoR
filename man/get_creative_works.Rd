@@ -6,14 +6,17 @@
 \alias{get_media_objects}
 \title{Get creative works}
 \usage{
-get_creative_works(pages = 1)
+get_creative_works(pages = 1, claims_list = NULL)
 
-get_news_articles(pages = 1)
+get_news_articles(pages = 1, claims_list = NULL)
 
-get_media_objects(pages = 1)
+get_media_objects(pages = 1, claims_list = NULL)
 }
 \arguments{
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
+
+\item{claims_list}{Vector of claim IDs (of format "/claims/xx") for
+which to download the creative work items.}
 }
 \description{
 Returns the creative works (containing both news articles and media objects) or
@@ -32,5 +35,6 @@ an abstract (if applicable).
 \dontrun{
 get_news_articles(pages=1)
 get_media_objects("all")
+get_creative_works(claims_list = c("/claims/36", "/claims/24"))
 }
 }
