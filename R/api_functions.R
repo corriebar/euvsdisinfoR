@@ -133,7 +133,8 @@ get_claims <- function(pages=1, remove_duplicates=TRUE) {
   claims %>%
     dplyr::select(-.data$author) %>%
     dplyr::rename(claims_id = .data$id,
-           review_id = .data$claim_review)
+           review_id = .data$claim_review,
+           claim_published = .data$date_published)
 }
 
 strip_html <- function(s) {
@@ -148,7 +149,9 @@ get_claim_reviews <- function(pages=1, clean_html=TRUE) {
   reviews <- paginate_resps(path, pages)
   reviews <- reviews %>%
     dplyr::select(claims_id = .data$item_reviewed, .data$type:.data$text) %>%
-    dplyr::rename(review_name = .data$name, html_text = .data$text)
+    dplyr::rename(review_name = .data$name,
+                  html_text = .data$text,
+                  review_published = .data$date_published)
   if (clean_html) {
     reviews <- reviews %>%
       dplyr::mutate(text = purrr::map_chr(.data$html_text, .f=strip_html))

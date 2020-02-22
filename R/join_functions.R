@@ -2,8 +2,7 @@
 join_claims_reviews <- function(disinfo) {
   claims <- dplyr::left_join(disinfo$claims,
                    disinfo$reviews %>%
-                     dplyr::select(-.data$type,
-                                   -.data$date_published), by="claims_id")
+                     dplyr::select(-.data$type), by="claims_id")
   new_disinfo(
     claims = claims,
     reviews = data.frame(),
@@ -114,6 +113,7 @@ join_claims_works <- function(disinfo) {
   claims <- disinfo$claims %>%
     tidyr::unnest(.data$appearances)
   creative_works <- disinfo$creative_works %>%
+    # date_published always empty for works (so far)
     dplyr::select(-.data$date_published) %>%
     dplyr::left_join(claims %>%
                        dplyr::select(-.data$type) ,

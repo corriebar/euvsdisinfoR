@@ -8,7 +8,7 @@ authors <- get_authors("all")
 creative_works <- get_creative_works("all")
 issues <- get_issues("all")
 
-# these are redundandt to creative works
+# these are redundant to creative works
 news_articles <- get_news_articles("all")
 media_objects <- get_media_objects("all")
 
