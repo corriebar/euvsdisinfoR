@@ -91,6 +91,8 @@ disinfo <- function(claims = data.frame(),
 #'
 #' @param disinfo A disinfo object.
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
+#' @param published_since Date string. Only retrieve claims that were published after this date.
+#' @param reviewed_since Date string. Only retrieve claims that were reviewed after this date.
 #' @export
 #' @examples
 #' d <- disinfo()
@@ -101,8 +103,8 @@ disinfo <- function(claims = data.frame(),
 #' d %>%
 #'    add_all()
 #' }
-add_claims <- function(disinfo, pages = 1) {
-  claims <- get_claims(pages)
+add_claims <- function(disinfo, pages = 1, published_since = NULL) {
+  claims <- get_claims(pages, since = published_since)
   new_disinfo(claims=claims,
               reviews = disinfo$reviews,
               authors = disinfo$authors,
@@ -116,8 +118,8 @@ add_claims <- function(disinfo, pages = 1) {
 
 #' @describeIn add_claims Download claim reviews data and add to disinfo object.
 #' @export
-add_reviews <- function(disinfo, pages = 1, clean_html=TRUE) {
-  reviews <- get_claim_reviews(pages, clean_html=clean_html)
+add_reviews <- function(disinfo, pages = 1, clean_html=TRUE, reviewed_since = NULL) {
+  reviews <- get_claim_reviews(pages, clean_html=clean_html, since = reviewed_since)
   new_disinfo(claims=disinfo$claims,
               reviews = reviews,
               authors = disinfo$authors,
@@ -268,7 +270,7 @@ add_media_objects <- function(disinfo, pages = 1) {
 
 #' @describeIn add_claims Downloads all 8 data tables from the API and adds them to the disinfo object.
 #' @export
-add_all <- function(disinfo, pages = 1) {
+add_all <- function(disinfo, pages = 1, reviewed_since=NULL, published_since=NULL) {
   disinfo %>%
     add_claims(pages) %>%
     add_reviews(pages) %>%

@@ -113,8 +113,6 @@ join_claims_works <- function(disinfo) {
   claims <- disinfo$claims %>%
     tidyr::unnest(.data$appearances)
   creative_works <- disinfo$creative_works %>%
-    # date_published always empty for works (so far)
-    dplyr::select(-.data$date_published) %>%
     dplyr::left_join(claims %>%
                        dplyr::select(-.data$type) ,
                      by = c("creative_work_id" = "appearances"))
