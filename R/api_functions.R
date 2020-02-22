@@ -102,12 +102,13 @@ paginate_resps <- function(path, pages, published_since = NULL, reviewed_since =
   } else if ( !is.null(published_since) & path == "claim_reviews") {
     query <- TRUE
     request_path <- paste0(path, "?itemReviewed.datePublished[after]=", published_since)
-  } else if (!is.null(claims_list) & length(claims_list) > 0) {
+  } else if (!is.null(claims_list) & length(claims_list) > 0 & length(unique(claims_list)) < 50) {
     query <- TRUE
     no_claims <- length(claims_list)
     if (no_claims == 1 ) {
       claims_param <- paste0("?claim[]=",claims_list[1])
     } else {
+      claims_list <- unique(claims_list)
       cl <- c(paste0("?claim[]=",claims_list[1]), paste0("&claim[]=", claims_list[2:no_claims]))
       claims_param <- paste0(cl, collapse = "")
     }

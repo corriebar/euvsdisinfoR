@@ -158,7 +158,7 @@ add_authors <- function(disinfo, pages = 1) {
 
 #' @describeIn add_claims Download creative works data and add to disinfo object.
 #' If either claims or claim reviews already exists in disinfo, then it will only
-#' download creative works that link to these claims/reviews
+#' download creative works that link to these claims/reviews. (Only works if there are less than 50 claim IDs)
 #' @export
 add_creative_works <- function(disinfo, pages = 1) {
   claims_list <- NULL
@@ -240,8 +240,8 @@ add_languages <- function(disinfo, pages = 1) {
 #' @describeIn add_claims Download news articles data and add to disinfo object. Will be
 #' written to `creative_works` and overwrites any previous creative works data.
 #' If you want to have both news articles and media objects, use `add_creative_works()`.
-#' If either claims or claim reviews already exists in disinfo, then it will only
-#' download news articles that link to these claims/reviews
+#' If either claims or claim reviews already exists in disinfo, then it will try to only
+#' download news articles that link to these claims/reviews. (Only works if there are less than 50 claim IDs)
 #'
 #' @export
 add_news_articles <- function(disinfo, pages = 1) {
@@ -269,7 +269,7 @@ add_news_articles <- function(disinfo, pages = 1) {
 #' written to `creative_works` and overwrites any previous creative works data.
 #' If you want to have both news articles and media objects, use `add_creative_works()`.
 #' If either claims or claim reviews already exists in disinfo, then it will only
-#' download media objects that link to these claims/reviews
+#' download media objects that link to these claims/reviews. (Only works if there are less than 50 claim IDs)
 #'
 #' @export
 add_media_objects <- function(disinfo, pages = 1) {
