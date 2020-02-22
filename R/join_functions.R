@@ -113,7 +113,7 @@ join_claims_works <- function(disinfo) {
   claims <- disinfo$claims %>%
     tidyr::unnest(.data$appearances)
   creative_works <- disinfo$creative_works %>%
-    dplyr::left_join(claims %>%
+    dplyr::inner_join(claims %>%
                        dplyr::select(-.data$type) ,
                      by = c("creative_work_id" = "appearances"))
 

@@ -92,6 +92,7 @@ disinfo <- function(claims = data.frame(),
 #' @param disinfo A disinfo object.
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
 #' @param published_since Date string. Only retrieve claims or claim reviews where the claims were published after this date.
+#' It is currently only possible to restrict the claims and claim reviews by the publishing date.
 #' @param reviewed_since Date string. Only retrieve claim reviews that were reviewed after this date.
 #' It is currently only possible to restrict the claim reviews by the reviewing date.
 #' @param clean_html If TRUE, then add another column `text` which is a plain text version of `html_text`.
@@ -320,6 +321,9 @@ has_countries <- function(disinfo) {
 }
 
 #' Flatten disinfo object
+#'
+#' Joins the different data frames in a smart way so that either each row corresponds to a claim or a creative work.
+#' Only full observations are kept.
 #'
 #' @param disinfo A disinfo object.
 #' @export

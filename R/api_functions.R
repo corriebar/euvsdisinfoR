@@ -232,7 +232,7 @@ get_authors <- function(pages=1) {
   path <- "authors"
   authors <- paginate_resps(path, pages)
   if (nrow(authors) > 0 ){
-    authors %>%
+    authors <- authors %>%
       dplyr::rename(organization_id = .data$id,
                     organization_name = .data$name)
   }
@@ -255,7 +255,7 @@ get_issues <- function(pages=1) {
   path <- "issues"
   issues <- paginate_resps(path, pages)
   if (nrow(issues) > 0 ) {
-    issues %>%
+    issues <- issues %>%
       dplyr::select(-.data$id_2) %>%
       dplyr::rename(issue_id = .data$id)
   }

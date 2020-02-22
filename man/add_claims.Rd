@@ -47,7 +47,8 @@ add_all(disinfo, pages = 1, reviewed_since = NULL, published_since = NULL)
 
 \item{pages}{Either the number of pages to download or "all". Defaults to 1.}
 
-\item{published_since}{Date string. Only retrieve claims or claim reviews where the claims were published after this date.}
+\item{published_since}{Date string. Only retrieve claims or claim reviews where the claims were published after this date.
+It is currently only possible to restrict the claims and claim reviews by the publishing date.}
 
 \item{clean_html}{If TRUE, then add another column `text` which is a plain text version of `html_text`.
 Defaults to TRUE.}
