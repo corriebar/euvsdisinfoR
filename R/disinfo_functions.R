@@ -250,9 +250,8 @@ add_news_articles <- function(disinfo, pages = 1) {
   if (has_reviews(disinfo)) { claims_list <- c(claims_list, disinfo$claims$claims_id) }
   news_articles <- get_news_articles(pages, claims_list = claims_list)
   if ( has_creative_works(disinfo) ) {
-    warning("Disinfo object already has creative works,will overwrite creative works with\n
-              news articles.\n
-            If you want to have both news articles and media objects, use `add_creative_works()` instead.")
+    warning("Disinfo object already has creative works, will overwrite creative works with news articles.
+  If you want to have both news articles and media objects, use `add_creative_works()` instead.")
   }
   new_disinfo(claims=disinfo$claims,
               reviews = disinfo$reviews,
@@ -278,9 +277,8 @@ add_media_objects <- function(disinfo, pages = 1) {
   if (has_reviews(disinfo)) { claims_list <- c(claims_list, disinfo$claims$claims_id) }
   media_objects <- get_media_objects(pages, claims_list = claims_list)
   if ( has_creative_works(disinfo) ) {
-    warning("Disinfo object already has creative works, will overwrite creative works with\n
-              media objects.\n
-            If you want to have both news articles and media objects, use `add_creative_works()` instead.")
+    warning("Disinfo object already has creative works, will overwrite creative works with media objects.
+  If you want to have both news articles and media objects, use `add_creative_works()` instead.")
   }
   new_disinfo(claims=disinfo$claims,
               reviews = disinfo$reviews,
