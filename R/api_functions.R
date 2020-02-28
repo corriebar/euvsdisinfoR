@@ -323,7 +323,7 @@ get_news_articles <- function(pages=1, claims_list = NULL) {
   if (nrow(newsarticle) > 0 ){
     newsarticle <- newsarticle %>%
       # date_published always empty for works (so far)
-      dplyr::select(-.data$date_published ) %>%
+      dplyr::select(-.data$date_published, -.data$name ) %>%
       dplyr::rename(creative_work_id = .data$id)
   }
   newsarticle
@@ -337,7 +337,7 @@ get_media_objects <- function(pages=1, claims_list = NULL) {
   if (nrow(media_objects) > 0 ) {
     media_objects <- media_objects %>%
       # date_published always empty for works (so far)
-      dplyr::select(-.data$date_published ) %>%
+      dplyr::select(-.data$date_published, -.data$name ) %>%
       dplyr::rename(creative_work_id = .data$id)
   }
   media_objects
