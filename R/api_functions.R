@@ -27,6 +27,8 @@ get_page_info <- function(parsed) {
 
 euvsdisinfo_api <- function(path="claims", first_request=TRUE) {
   url <- httr::modify_url("https://api.veedoo.io/", path=path)
+  # could also do params = list("datePublished[after]"="2020-01-01")
+  # modify_url(url, path=path, query=params)
   resp <- httr::GET(url, httr::accept("application/ld+json"), ua )
 
   if (httr::http_error(resp)) {
@@ -307,7 +309,7 @@ get_creative_works <- function(pages=1, claims_list = NULL) {
   if (nrow(creative_works) > 0 ) {
     creative_works <- creative_works %>%
       # date_published always empty for works (so far)
-      dplyr::select(-.data$date_published ) %>%
+      dplyr::select(-.data$date_published, -.data$name ) %>%
       dplyr::rename(creative_work_id = .data$id)
   }
   creative_works
