@@ -25,11 +25,13 @@ get_page_info <- function(parsed) {
 
 
 
-euvsdisinfo_api <- function(path="claims", first_request=TRUE) {
+euvsdisinfo_api <- function(path="claims", first_request=TRUE, params=list()) {
   url <- httr::modify_url("https://api.veedoo.io/", path=path)
   # could also do params = list("datePublished[after]"="2020-01-01")
   # modify_url(url, path=path, query=params)
-  resp <- httr::GET(url, httr::accept("application/ld+json"), ua )
+  params["order[datePublished"] <- "desc"
+  params["order[id]"] <- "desc"
+  resp <- httr::GET(url, httr::accept("application/ld+json"), ua, query=params )
 
   if (httr::http_error(resp)) {
     stop(
@@ -87,39 +89,23 @@ print.disinfo_request <- function(x, ...) {
 }
 
 
-get_data_from_page <- function(page_path, pb) {
+get_data_from_page <- function(path, page, pb, params) {
   pb$tick()$print()
-  resp <- euvsdisinfo_api(page_path, first_request = FALSE)
+  params["page"] <- page
+  resp <- euvsdisinfo_api(path, first_request = FALSE, params = params)
   resp$data
 }
 
-paginate_resps <- function(path, pages, published_since = NULL, reviewed_since = NULL, claims_list = NULL) {
-  query <- FALSE
+paginate_resps <- function(path, pages, published_since = NULL, reviewed_since = NULL) {
+  params <- list()
   if ( !is.null(reviewed_since)  & path == "claim_reviews")  {
-    query <- TRUE
-    request_path <- paste0(path, "?datePublished[after]=", reviewed_since)
+    params["datePublished[after]"] <- reviewed_since
   } else if ( !is.null(published_since) & path == "claims") {
-    query <- TRUE
-    request_path <- paste0(path, "?datePublished[after]=", published_since)
+    params["datePublished[after]"] <-  published_since
   } else if ( !is.null(published_since) & path == "claim_reviews") {
-    query <- TRUE
-    request_path <- paste0(path, "?itemReviewed.datePublished[after]=", published_since)
-  } else if (!is.null(claims_list) & length(claims_list) > 0 & length(unique(claims_list)) < 50) {
-    query <- TRUE
-    no_claims <- length(claims_list)
-    if (no_claims == 1 ) {
-      claims_param <- paste0("?claim[]=",claims_list[1])
-    } else {
-      claims_list <- unique(claims_list)
-      cl <- c(paste0("?claim[]=",claims_list[1]), paste0("&claim[]=", claims_list[2:no_claims]))
-      claims_param <- paste0(cl, collapse = "")
-    }
-    request_path <- paste0(path, claims_param)
+    params["itemReviewed.datePublished[after]"] <- published_since
   }
-  else {
-    request_path <- path
-  }
-  resp <- euvsdisinfo_api(request_path, first_request = TRUE)
+  resp <- euvsdisinfo_api(path, first_request = TRUE, params=params)
   last_page <- resp$last_page
   if ( is.null(last_page) ) {
     last_page_no <- 1
@@ -147,15 +133,10 @@ paginate_resps <- function(path, pages, published_since = NULL, reviewed_since =
   }
   else {
     # paginate through remaining pages
-    if (query) {
-      page_paths <- paste0(request_path, "&page=", 2:pages)
-    } else {
-      page_paths <- paste0(request_path, "?page=", 2:pages)
-    }
 
-    pb <- dplyr::progress_estimated(length(page_paths))
+    pb <- dplyr::progress_estimated(pages)
 
-    df <- purrr::map_dfr(page_paths, .f = ~get_data_from_page(., pb) )
+    df <- purrr::map_dfr(2:pages, .f = ~get_data_from_page(path, page= ., pb, params = params) )
 
     d <- dplyr::bind_rows(resp$data, df)
   }
@@ -167,7 +148,6 @@ paginate_resps <- function(path, pages, published_since = NULL, reviewed_since =
 #' Retrieve the claims and claim reviews.
 #'
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
-#' @param remove_duplicates Remove claim duplicates. Defaults to TRUE.
 #' @param published_since Date string. Only retrieve claims that were published after this date.
 #' @param reviewed_since Date string. Only retrieve claim reviews where the claim was reviewed after this date.
 #' @param clean_html If TRUE, then add another column `text` which is a plain text version of `html_text`.
@@ -182,13 +162,9 @@ paginate_resps <- function(path, pages, published_since = NULL, reviewed_since =
 #' library(lubridate)
 #' get_claims(2, since = today() - months(3) )
 #' }
-get_claims <- function(pages=1, remove_duplicates=TRUE, published_since=NULL) {
+get_claims <- function(pages=1, published_since=NULL) {
   path <- "claims"
   claims <- paginate_resps(path, pages, published_since=published_since)
-  if (remove_duplicates) {
-    dups <- duplicated(claims)
-    claims <- claims[!dups,]
-  }
   if (nrow(claims) > 0 ) {
     claims <- claims %>%
       dplyr::select(-.data$author) %>%
@@ -294,18 +270,16 @@ get_issues <- function(pages=1) {
 #' an abstract (if applicable).
 #'
 #' @param pages Either the number of pages to download or "all". Defaults to 1.
-#' @param claims_list Vector of claim IDs (of format "/claims/xx") for
-#' which to download the creative work items.
 #' @export
 #' @examples
 #' \dontrun{
 #' get_news_articles(pages=1)
 #' get_media_objects("all")
-#' get_creative_works(claims_list = c("/claims/36", "/claims/24"))
+#' get_creative_works()  # equivalent to pages=1
 #' }
-get_creative_works <- function(pages=1, claims_list = NULL) {
+get_creative_works <- function(pages=1) {
   path <- "creative_works"
-  creative_works <- paginate_resps(path, pages, claims_list = claims_list)
+  creative_works <- paginate_resps(path, pages)
   if (nrow(creative_works) > 0 ) {
     creative_works <- creative_works %>%
       # date_published always empty for works (so far)
@@ -317,9 +291,9 @@ get_creative_works <- function(pages=1, claims_list = NULL) {
 
 #' @describeIn get_creative_works Get only news articles.
 #' @export
-get_news_articles <- function(pages=1, claims_list = NULL) {
+get_news_articles <- function(pages=1) {
   path <- "news_articles"
-  newsarticle <- paginate_resps(path, pages, claims_list = claims_list)
+  newsarticle <- paginate_resps(path, pages)
   if (nrow(newsarticle) > 0 ){
     newsarticle <- newsarticle %>%
       # date_published always empty for works (so far)
@@ -331,9 +305,9 @@ get_news_articles <- function(pages=1, claims_list = NULL) {
 
 #' @describeIn get_creative_works Get only media objects (videos).
 #' @export
-get_media_objects <- function(pages=1, claims_list = NULL) {
+get_media_objects <- function(pages=1) {
   path <- "media_objects"
-  media_objects <- paginate_resps(path, pages, claims_list = claims_list)
+  media_objects <- paginate_resps(path, pages)
   if (nrow(media_objects) > 0 ) {
     media_objects <- media_objects %>%
       # date_published always empty for works (so far)
